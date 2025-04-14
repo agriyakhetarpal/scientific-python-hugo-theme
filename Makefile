@@ -58,8 +58,11 @@ scipy:
 
 main:
 	rm -rf $@
-	git clone --depth 1 https://github.com/scientific-python/scientific-python.org $@
-	(cd $@ ; git submodule update --init content/specs)
+	git clone --depth 1 https://github.com/agriyakhetarpal/scientific-python.org --branch spec-14 $@
+	(cd $@ ; git submodule sync)
+	(cd $@ ; git submodule update --init --recursive content/specs)
+	(cd $@/content/specs ; git switch spec-14)
+	(cd $@/content/specs ;git reset --hard origin/spec-14)
 	(cd $@ ; pip install -q -r requirements.txt)
 	(cd $@ ; make calendars ; make core-project-json)
 	(cd $@ ; perl -pi -e 'print "relativeURLs: true\n" if $$. == 1' config.yaml)
